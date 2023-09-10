@@ -22,6 +22,36 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use('/', indexRouter)
 
+// 响应信息中间件
+app.use((req, res, next) => {
+  /**
+   * 错误信息返回函数
+   * @param {*} error 错误的信息
+   * @param {*} success 状态, 默认是false
+   */
+  res.error = (error, success = false) => {
+    res.json({
+      code: 5000,
+      message: error instanceof Error ? error.message : error,
+      success
+    })
+  }
+  /**
+   * 成功格式
+   * @param {*} data 数据 
+   * @param {*} success 状态
+   */
+  res.success = (data, success = true) => {
+    res.json({
+      code: 2000,
+      data: data,
+      message: 'ok',
+      success: success
+    })
+  }
+  next()
+})
+
 // 用户接口
 app.use('/api/user', usersRouter)
 
@@ -29,5 +59,6 @@ app.use('/api/user', usersRouter)
 app.use(function(req, res, next) {
   next(createError(404))
 })
+
 
 module.exports = app
