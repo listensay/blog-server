@@ -18,7 +18,6 @@ router.post('/login', function (req, res) {
 
     if (isPasswordValid) {
       const token = jwt.sign({ username }, config.token_secret, { expiresIn: '2h' })
-      console.log(123)
       res.success(token, '登陆成功')
     } else {
       res.error('用户名或密码错误')
@@ -46,6 +45,53 @@ router.post('/register', (req, res) => {
         res.success(null, '注册成功!')
       })
     })
+  })
+})
+
+// 获取用户信息
+router.get('/userinfo', (req, res) => {
+  const { username } = req.auth
+  DB.query('select username, email, avatar, nickname, registration_date from users where username = ?', username, (err, result) => {
+    if (err) return res.error(err)
+    if (result.length === 0) return res.error('用户信息不存在')
+    const userinfo = result[0]
+    res.success({ userinfo })
+  })
+})
+
+// 修改用户资料
+router.post('/changeUserInfo', (req, res) => {
+  const userinfo = req.body
+  const { username } = req.auth
+  // 1 查询邮箱是否存在
+
+  DB.query('select email,nickname,username from users where email = ?', userinfo.email, (err, result) => {
+    if (err) return res.error(err)
+    // 查询是否有重复的邮箱
+    if (result.length > 0) {
+      // 如果有重复的邮箱,查询这个邮箱的有户名是否和用户修改的用户名一样
+      // 如果一样说明这个用户只是想修改其它资料而已并不想修改邮箱
+      if (result[0].username === username) {
+        DB.query('update users set ? where username = ?', [userinfo, username], (err, result) => {
+          if (err) return res.error(err)
+          if (result.affectedRows === 1) {
+            return res.success()
+          }
+        })
+      } else {
+        // 用户名不一样,是其它用户的邮箱,则不能修改邮箱
+        return res.error('邮箱已存在')
+      }
+    } else {
+      // 2 邮箱没有重复, 进行修改资料
+      DB.query('update users set ? where username = ?', [userinfo, username], (err, result) => {
+        if (err) return res.error(err)
+        if (result.affectedRows === 1) {
+          res.success()
+        }
+      })
+    }
+
   })
 })
 
