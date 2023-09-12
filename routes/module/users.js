@@ -15,9 +15,9 @@ router.post('/login', function (req, res) {
 
     // 3.用户名存在 进行密码匹配
     const isPasswordValid = Bcrypt.compareSync(password, result[0].password)
-
+    const user_id = result[0].user_id
     if (isPasswordValid) {
-      const token = jwt.sign({ username }, config.token_secret, { expiresIn: '2h' })
+      const token = jwt.sign({ username, user_id }, config.token_secret, { expiresIn: '2h' })
       res.success(token, '登陆成功')
     } else {
       res.error('用户名或密码错误')

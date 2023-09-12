@@ -45,9 +45,10 @@ app.use((req, res, next) => {
    * @param {*} success 状态, 默认是false
    */
   res.error = (error, success = false) => {
+    console.log(error)
     res.json({
       code: 5000,
-      message: error instanceof Error ? error.message : error,
+      message: error instanceof Error ? error.code : error,
       success
     })
   }
@@ -76,7 +77,8 @@ app.use('/api/images', image)
 app.use('/api/post', postRouter)
 
 app.use((err, req, res, next) => {
-  res.json(errorMessage(err.message))
+  console.log(123, err)
+  res.json(errorMessage(err.code))
 })
 
 module.exports = app
