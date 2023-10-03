@@ -17,13 +17,21 @@ const cors = require('cors')
 app.use(cors())
 
 // Token
-app.use(jwt({ secret: config.token_secret, algorithms: ['HS256'] }).unless({ path: ['/api/user/login', '/api/user/register', /avatar/,] }))
+app.use(jwt({ secret: config.token_secret, algorithms: ['HS256'] }).unless({
+  path: [
+    '/api/user/login',
+    '/api/user/register',
+    /avatar/,
+    /index/
+  ]
+}))
 
 // 路由
 var indexRouter = require('./routes/index')
 var usersRouter = require('./routes/module/users')
 const image = require('./routes/module/images')
 const postRouter = require('./routes/module/post')
+const frontApi = require('./routes/module/frontApi')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
@@ -48,7 +56,7 @@ app.use((req, res, next) => {
     console.log(error)
     res.json({
       code: 5000,
-      message: error instanceof Error ? error.code : error,
+      message: error instanceof Error ? errorMessage(error.code).message : error,
       success
     })
   }
@@ -75,9 +83,11 @@ app.use('/api/user', usersRouter)
 app.use('/api/images', image)
 // 文章接口
 app.use('/api/post', postRouter)
+// 前台接口
+app.use('/index', frontApi)
 
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  console.log(123, err)
   res.json(errorMessage(err.code))
 })
 

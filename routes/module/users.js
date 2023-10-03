@@ -51,7 +51,7 @@ router.post('/register', (req, res) => {
 // 获取用户信息
 router.get('/userinfo', (req, res) => {
   const { username } = req.auth
-  DB.query('select username, email, avatar, nickname, registration_date from users where username = ?', username, (err, result) => {
+  DB.query('select username, email, avatar, nickname, registration_date, bg, description  from users where username = ?', username, (err, result) => {
     if (err) return res.error(err)
     if (result.length === 0) return res.error('用户信息不存在')
     const userinfo = result[0]

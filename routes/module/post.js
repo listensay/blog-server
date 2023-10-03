@@ -27,12 +27,14 @@ router.delete('/deletePost/:post_id', (req, res) => {
 router.get('/listPost', (req, res) => {
   const { title, post_id } = req.query
   const searchQuery = `%${title || ''}%`
-  let sql = 'SELECT p.*, u.username FROM post p JOIN users u ON p.user_id = u.user_id WHERE p.title LIKE ? AND p.state = 1'
+  let sql = 'SELECT p.*, u.nickname FROM post p JOIN users u ON p.user_id = u.user_id WHERE p.title LIKE ? AND p.state = 1'
   const values = [searchQuery]
   if (post_id) {
     sql += ' AND p.post_id = ?'
     values.push(post_id)
   }
+
+  sql += ' ORDER BY p.create_date DESC'
 
   DB.query(sql, values, (err, result) => {
     if (err) throw err
@@ -40,6 +42,16 @@ router.get('/listPost', (req, res) => {
       return res.error('找不到哦~')
     }
     res.success({ list: result })
+  })
+})
+
+// 编辑文章
+router.post('/editPost', (req, res) => {
+  const article = req.body
+  DB.query('update post set ? where post_id = ?', [article, article.post_id], (err, result) => {
+    if (err) return res.error(err)
+    if (result.affectedRows !== 1) res.error('修改失败')
+    res.success('修改成功')
   })
 })
 

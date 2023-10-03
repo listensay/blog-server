@@ -1,6 +1,7 @@
 /* eslint-disable indent */
 // 错误中间件
 exports.errorMessage = message => {
+  console.log(message)
   switch (message) {
     case 'credentials_required':
       return {
@@ -18,7 +19,7 @@ exports.errorMessage = message => {
     case 'ER_PARSE_ERROR':
       return {
         code: 5055,
-        message: '服务器错误',
+        message: '参数错误',
         success: false
       }
     default: return message
