@@ -32,6 +32,7 @@ var usersRouter = require('./routes/module/users')
 const image = require('./routes/module/images')
 const postRouter = require('./routes/module/post')
 const frontApi = require('./routes/module/frontApi')
+const categoryRouter = require('./routes/module/category')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
@@ -83,6 +84,9 @@ app.use('/api/user', usersRouter)
 app.use('/api/images', image)
 // 文章接口
 app.use('/api/post', postRouter)
+// 分类接口
+app.use('/api/category', categoryRouter)
+
 // 前台接口
 app.use('/index', frontApi)
 

@@ -6,7 +6,7 @@ const DB = require('../../db/index')
 router.get('/article', (req, res) => {
   const { title, post_id } = req.query
   const searchQuery = `%${title || ''}%`
-  let sql = 'SELECT p.*, u.nickname, u.avatar FROM post p JOIN users u ON p.user_id = u.user_id WHERE p.title LIKE ? AND p.state = 1'
+  let sql = 'SELECT p.*, u.nickname, u.avatar, c.category_name, c.category_desc, c.category_img FROM post p JOIN users u ON p.user_id = u.user_id JOIN category c ON p.category_id = c.category_id WHERE p.title LIKE ? AND p.state = 1'
   const values = [searchQuery]
   if (post_id) {
     sql += ' AND p.post_id = ?'
