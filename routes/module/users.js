@@ -87,11 +87,33 @@ router.post('/changeUserInfo', (req, res) => {
       DB.query('update users set ? where username = ?', [userinfo, username], (err, result) => {
         if (err) return res.error(err)
         if (result.affectedRows === 1) {
-          res.success()
+          res.success(null, '修改成功')
         }
       })
     }
 
+  })
+})
+
+router.post('/setUserProfile', (req, res) => {
+  const result = req.body
+  const { username } = req.auth
+  const { profiles } = result
+  DB.query(`update users set profiles = ? where username = "${username}"`, profiles, (err, result) => {
+    if (err) return res.error(err)
+    if (result.affectedRows === 1) {
+      res.success(null, '设置成功')
+    }
+  })
+})
+
+router.post('/userProfile', (req, res) => {
+  const { username } = req.auth
+  DB.query('select profiles from users where username = ?', username, (err, result) => {
+    if (err) return res.error(err)
+    if (result.length !== 0) {
+      res.success(...result)
+    }
   })
 })
 
