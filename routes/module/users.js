@@ -107,7 +107,7 @@ router.post('/setUserProfile', (req, res) => {
   })
 })
 
-router.post('/userProfile', (req, res) => {
+router.get('/userProfile', (req, res) => {
   const { username } = req.auth
   DB.query('select profiles from users where username = ?', username, (err, result) => {
     if (err) return res.error(err)

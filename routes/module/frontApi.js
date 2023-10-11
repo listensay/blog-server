@@ -33,4 +33,14 @@ router.get('/userinfo', (req, res) => {
   })
 })
 
+router.get('/userProfile', (req, res) => {
+  const username = 'admin'
+  DB.query('select profiles from users where username = ?', username, (err, result) => {
+    if (err) return res.error(err)
+    if (result.length !== 0) {
+      res.success(...result)
+    }
+  })
+})
+
 module.exports = router
