@@ -31,7 +31,7 @@ var indexRouter = require('./routes/index')
 var usersRouter = require('./routes/module/users')
 const image = require('./routes/module/images')
 const postRouter = require('./routes/module/post')
-const frontApi = require('./routes/module/frontApi')
+const FrontAPI = require('./routes/module/FrontAPI')
 const categoryRouter = require('./routes/module/category')
 
 // view engine setup
@@ -88,7 +88,7 @@ app.use('/api/post', postRouter)
 app.use('/api/category', categoryRouter)
 
 // 前台接口
-app.use('/index', frontApi)
+app.use('/index', FrontAPI)
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
