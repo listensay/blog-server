@@ -21,7 +21,7 @@ app.use(jwt({ secret: config.token_secret, algorithms: ['HS256'] }).unless({
   path: [
     '/api/user/login',
     '/api/user/register',
-    /avatar/,
+    /images/,
     /index/
   ]
 }))
@@ -39,7 +39,7 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 app.use(logger('dev'))
 // 图片静态资源地址
-app.use('/avatar', express.static('./public/assets/avatar'))
+app.use('/images', express.static('./public/assets/images'))
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -81,7 +81,7 @@ app.use('/', indexRouter)
 // 用户接口
 app.use('/api/user', usersRouter)
 // 图片接口
-app.use('/api/images', image)
+app.use('/api/upload', image)
 // 文章接口
 app.use('/api/post', postRouter)
 // 分类接口
