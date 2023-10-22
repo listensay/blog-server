@@ -43,4 +43,12 @@ router.get('/userProfile', (req, res) => {
   })
 })
 
+router.get('/category', (req, res) => {
+  DB.query('select * from category', (err, result) => {
+    if (err) return res.error(err)
+    if (result.length <= 0) res.error('查询失败')
+    res.success({ list: result })
+  })
+})
+
 module.exports = router
